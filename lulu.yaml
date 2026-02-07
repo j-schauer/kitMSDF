@@ -1,8 +1,7 @@
 version: 0.1.0
-name: kitMSDF
+name: libMSDF
 
 # Single glyph MSDF generation via WASM
-# Publishes compiled JS + WASM artifacts
 
 deps:
   node-modules:
@@ -11,6 +10,13 @@ deps:
     export: []
     notes: "esbuild, typescript, dts-bundle-generator"
     update: npm install
+
+  msdf-atlas-gen:
+    type: vendored
+    path: submodule/msdf-atlas-gen/
+    export: []
+    notes: "MSDF glyph generation C++ library (Chlumsky). We use msdfgen/core/ and msdfgen/ext/ only."
+    update: echo "git submodule - update manually"
 
   pixl:
     type: transient-depot
@@ -27,7 +33,7 @@ build:
       make -f Makefile.wasm
 
   _types:
-    - npx dts-bundle-generator -o build/kitMSDF.d.ts src/index.ts --no-check 2>/dev/null || echo "Types generation skipped"
+    - npx dts-bundle-generator -o build/libMSDF.d.ts src/index.ts --no-check 2>/dev/null || echo "Types generation skipped"
 
   release:
     - |
@@ -36,17 +42,10 @@ build:
       @build._types
       mkdir -p dist
       npx esbuild src/index.ts --bundle --format=esm --platform=neutral --target=es2020 \
-        --outfile=dist/kitMSDF.js
-      npx esbuild src/worker.ts --bundle --format=esm --platform=node --target=es2020 \
-        --outfile=dist/worker.js \
-        --external:worker_threads
-      npx esbuild src/worker-browser.ts --bundle --format=esm --platform=browser --target=es2020 \
-        --outfile=dist/worker-browser.js
-      npx esbuild src/worker-deno.ts --bundle --format=esm --platform=browser --target=es2020 \
-        --outfile=dist/worker-deno.js
-      cp build/msdf-core.js build/msdf-core.wasm dist/
-      cp build/kitMSDF.d.ts dist/ 2>/dev/null || true
-      cp src/shaders.js dist/
+        --outfile=dist/libMSDF.js
+      cp build/libmsdf-core.wasm dist/libMSDF.wasm
+      cp build/libMSDF.d.ts dist/ 2>/dev/null || true
+      cp src/shader.js dist/
       cp docs/api.md dist/
 
 run:
@@ -55,9 +54,9 @@ run:
       @deps
       @build._wasm
       mkdir -p dist/assets
-      npx esbuild src/index.ts --bundle --format=esm --platform=node --target=es2020 \
-        --outfile=dist/kitMSDF.js
-      cp build/msdf-core.js build/msdf-core.wasm dist/
+      npx esbuild src/index.ts --bundle --format=esm --platform=neutral --target=es2020 \
+        --outfile=dist/libMSDF.js
+      cp build/libmsdf-core.wasm dist/libMSDF.wasm
       cp assets/*.ttf dist/assets/
       npx tsc tests/test-msdf.ts --target esnext --module esnext --moduleResolution node --outDir dist --skipLibCheck
       cd dist && node test-msdf.js

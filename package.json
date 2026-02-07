@@ -1,5 +1,5 @@
 {
-  "name": "kitmsdf",
+  "name": "libmsdf",
   "private": true,
   "type": "module",
   "devDependencies": {

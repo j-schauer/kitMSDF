@@ -5,6 +5,6 @@ lib/
 *.js
 *.d.ts
 !go.sh
-!src/shaders.js
+!src/shader.js
 .DS_Store
 .idea/
