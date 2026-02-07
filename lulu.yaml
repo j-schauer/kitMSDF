@@ -42,6 +42,7 @@ build:
       @build._types
       mkdir -p dist
       npx esbuild src/index.ts --bundle --format=esm --platform=neutral --target=es2020 \
+        --external:module \
         --outfile=dist/libMSDF.js
       cp build/libmsdf-core.wasm dist/libMSDF.wasm
       cp build/libMSDF.d.ts dist/ 2>/dev/null || true
@@ -55,6 +56,7 @@ run:
       @build._wasm
       mkdir -p dist/assets
       npx esbuild src/index.ts --bundle --format=esm --platform=neutral --target=es2020 \
+        --external:module \
         --outfile=dist/libMSDF.js
       cp build/libmsdf-core.wasm dist/libMSDF.wasm
       cp assets/*.ttf dist/assets/

@@ -12,6 +12,7 @@ SOURCES = \
         $(SRC_DIR)/wasm/wasm_binding.cpp \
         $(MSDFGEN_DIR)/core/Contour.cpp \
         $(MSDFGEN_DIR)/core/contour-combiners.cpp \
+        $(MSDFGEN_DIR)/core/convergent-curve-ordering.cpp \
         $(MSDFGEN_DIR)/core/DistanceMapping.cpp \
         $(MSDFGEN_DIR)/core/EdgeHolder.cpp \
         $(MSDFGEN_DIR)/core/edge-coloring.cpp \
