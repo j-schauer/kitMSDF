@@ -7,3 +7,4 @@ lib/
 !go.sh
 !src/shaders.js
 .DS_Store
+.idea/
