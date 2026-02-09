@@ -14,7 +14,7 @@ Both MSDF and MTSDF require a specialized fragment shader to render. The raw tex
 
 The core math comes from Viktor Chlumsky's [msdfgen](https://github.com/Chlumsky/msdfgen) C++ library (MIT license). msdfgen implements the algorithms described in Chlumsky's master's thesis on multi-channel distance field generation. It handles glyph shape loading via FreeType, edge coloring (assigning channels to edge segments), and the actual distance field rasterization.
 
-The C++ source lives in `submodule/msdf-atlas-gen/` as a git submodule. We use only the `msdfgen/core/` (math, rasterization) and `msdfgen/ext/` (FreeType font loading) directories. The atlas-packing, PNG export, and CLI components of msdf-atlas-gen are not used.
+The C++ source lives in `vendor/msdf-atlas-gen/` as a git submodule. We use only the `msdfgen/core/` (math, rasterization) and `msdfgen/ext/` (FreeType font loading) directories. The atlas-packing, PNG export, and CLI components of msdf-atlas-gen are not used.
 
 Our C++ binding layer (`src/wasm/core.h`, `src/wasm/wasm_binding.cpp`) provides a minimal Emscripten interface: load font bytes, generate one glyph at a time, return metrics + pixel data. The C++ is compiled to WASM via Emscripten with `-sUSE_FREETYPE=1` (Emscripten's FreeType port). The same C++ core could be compiled natively for macOS, Linux, or Windows -- WASM is the current target.
 
@@ -57,8 +57,8 @@ Run: `lulu run example`, open `http://localhost:8000/example/glyph/`
 ## Build
 
 ```bash
-lulu build release    # compile WASM, bundle JS, generate types
-lulu run test         # build + run Node.js test suite
+lulu build _dist      # compile WASM, bundle JS, generate types
+lulu run tests        # build + run Node.js test suite
 lulu run example      # start http-server for shader test harness
 ```
 
@@ -76,7 +76,7 @@ Requires: Emscripten (em++), Node.js, npm.
 
 - `src/` -- TypeScript wrapper (`msdf-generator.ts`, `index.ts`) and shader source (`shader.js`)
 - `src/wasm/` -- C++ Emscripten binding (`wasm_binding.cpp`, `core.h`)
-- `submodule/msdf-atlas-gen/` -- upstream msdfgen C++ (git submodule, see `submodule/PROVENANCE.md`)
+- `vendor/msdf-atlas-gen/` -- upstream msdfgen C++ (git submodule, see `vendor/PROVENANCE.md`)
 - `example/glyph/` -- shader test harness (WebGL2 / WebGPU / Pixi)
 - `example/assets/` -- pre-built MSDF and MTSDF atlas textures for the test harness
 - `tests/` -- Node.js test suite

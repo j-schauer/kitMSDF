@@ -3,7 +3,7 @@
 
 BUILD_DIR = build
 SRC_DIR = src
-MSDFGEN_DIR = submodule/msdf-atlas-gen/msdfgen
+MSDFGEN_DIR = vendor/msdf-atlas-gen/msdfgen
 
 CXX = em++
 

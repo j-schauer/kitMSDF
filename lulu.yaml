@@ -13,17 +13,16 @@ deps:
 
   msdf-atlas-gen:
     type: vendored
-    path: submodule/msdf-atlas-gen/
+    path: vendor/msdf-atlas-gen/
     export: []
     notes: "MSDF glyph generation C++ library (Chlumsky). We use msdfgen/core/ and msdfgen/ext/ only."
     update: echo "git submodule - update manually"
 
   pixl:
-    type: transient-depot
-    source: "github:j-schauer/pixl"
+    type: transient
     path: lib/pixl/
     export: []
-    notes: "PixiJS for example/glyph shader demo"
+    notes: "PixiJS for example/glyph shader demo - github:j-schauer/pixl"
     update: lulu depot github j-schauer/pixl 'pixl-*.zip' lib/pixl/ --latest
 
 build:
@@ -35,7 +34,7 @@ build:
   _types:
     - npx dts-bundle-generator -o build/libMSDF.d.ts src/index.ts --no-check 2>/dev/null || echo "Types generation skipped"
 
-  release:
+  _dist:
     - |
       @deps
       @build._wasm
@@ -50,7 +49,7 @@ build:
       cp docs/api.md dist/
 
 run:
-  test:
+  tests:
     - |
       @deps
       @build._wasm
